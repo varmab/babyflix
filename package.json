@@ -1,0 +1,19 @@
+{
+  "name": "babyflix",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "^2.7.1",
+    "cron": "^1.0.5",
+    "dotenv": "^0.4.0",
+    "lodash": "^2.4.1",
+    "mysql": "^2.5.4",
+    "request-promise": "^0.3.2"
+  }
+}
