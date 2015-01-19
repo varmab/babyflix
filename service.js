@@ -58,30 +58,37 @@ var getUsers=function(){
 routes.kaltura.initialize(function(){
     routes.kaltura.listUser().then(function(users){
         users.forEach(function(user) {
+            console.log(user);
             if(user.id != null) {
+                console.log(user.name);
                 routes.kaltura.listMedia(user.id).then(function(media){
-
-                    //routes.stupeflix.createVideo(media).then(function(response){
-                    //    console.log(response);
-                    //}).catch(function(error){
-                    //    console.log(error);
-                    //})
-
+                    routes.stupeflix.createTestVideo(media).then(function(response){
+                       console.log(response);
+                    }).catch(function(error){
+                        console.log(error);
+                    })
                 }).catch(function(){
                     console.error('Error');
                 });
             }
         });
+
     }).catch(function(){
         console.error('Error');
-    })
+    });
 });
 
-routes.stupeflix.createTestVideo().then(function(response){
-    console.log(response);
-}).catch(function(error){
-    console.log(error);
-})
+/**
+var createTest=function(media) {
+    routes.stupeflix.createTestVideo(media).then(function (response) {
+        console.log(response);
+    }).catch(function (error) {
+        console.log(error);
+    })
+}
+
+createTest(mediaEntries[0]);
+ **/
 
 
 /**

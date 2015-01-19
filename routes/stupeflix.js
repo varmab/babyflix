@@ -69,38 +69,63 @@ exports.createVideo= function(media){
     return deferred.promise;
 }
 
-exports.createTestVideo= function(){
-    var deferred = Promise.pending();
-    var secret="Secret " + process.env.STUPEFLIX_SECRET
+exports.createTestVideo= function(media){
+
+    var taskHeaderDefinition="<movie service='craftsman-1.0'><body><stack>";
+    var taskFooterDefinition="<effect type='none'><text type='zone' height='0.15' right='0.0' bottom='0.0'>Demo Video</text></effect><overlay height='0.20' right='0.0' top='0.0'><image filename='http://s3.amazonaws.com/stupeflix-assets/apiusecase/logo_stupeflix.png'/></overlay></stack>" +
+        "<transition type='crossfade' duration='0.5'/><effect type='none'><video filename='http://s3.amazonaws.com/stupeflix-assets/apiusecase/branding-postroll.mp4'/></effect></body></movie>";
+    var taskItemDefinition="";
 
 
-    var headers = {"Authorization": secret};
-    var task = {
-        "tasks": {
-            "task_name": "video.create",
-            "definition": "<movie service='craftsman-1.0'><body><stack><effect type='none'><video filename='http://s3.amazonaws.com/stupeflix-assets/apiusecase/footage.mov' duration='5.0'/></effect>" +
-            "<effect type='none'><text type='zone' height='0.15' right='0.0' bottom='0.0'>Hello World </text></effect><overlay height='0.20' right='0.0' top='0.0'><image filename='http://s3.amazonaws.com/stupeflix-assets/apiusecase/logo_stupeflix.png'/></overlay></stack>" +
-            "<transition type='crossfade' duration='0.5'/><effect type='none'><video filename='http://s3.amazonaws.com/stupeflix-assets/apiusecase/branding-postroll.mp4'/></effect></body></movie>"
-        }
-    };
+    if(media.length>0) {
 
-    var options = {
-        uri : 'https://dragon.stupeflix.com/v2/create',
-        method : 'POST',
-        body: task,
-        headers: headers,
-        json: true
-    };
+        media.forEach(function (item) {
+            if (item.name.indexOf('still') > -1) {
+                taskItemDefinition = taskItemDefinition + "<effect type='none'><image filename='" + item.downloadUrl + "'/></effect>";
+            }
+            else {
+                taskItemDefinition = taskItemDefinition + "<effect type='none'><video filename='" + item.downloadUrl + "'/></effect>";
+            }
 
-    rp(options)
-        .then(function(response){
+        })
+
+        var taskDefintion=taskHeaderDefinition + taskItemDefinition + taskFooterDefinition;
+
+        console.log(taskDefintion);
+
+        /**
+        var deferred = Promise.pending();
+        var secret = "Secret " + process.env.STUPEFLIX_SECRET
+
+         var headers = {"Authorization": secret};
+         var task = {
+            "tasks": {
+                "task_name": "video.create",
+                 "definition": taskDefintion
+
+             }
+        };
+
+         var options = {
+            uri : 'https://dragon.stupeflix.com/v2/create',
+            method : 'POST',
+            body: task,
+            headers: headers,
+            json: true
+        };
+
+         rp(options)
+         .then(function(response){
             deferred.resolve(response);
         })
-        .catch(function(error){
+         .catch(function(error){
             deferred.reject(error);
         });
+         **/
 
+    }
 
-    return deferred.promise;
+      return deferred.promise;
+
 }
 

@@ -29,6 +29,10 @@ exports.listMedia = function(userid) {
     if(userid != undefined) {
         filter.userIdEqual = userid;
     }
+    filter.nameMultiLikeOr="hd_still_1,hd_still_2,hd_still_2-1,hd_still_3,hd_still_3-1," +
+    "hd_still_4,hd_still_4-2,hd_still_4-3,hd_still_4-4," +
+    "hd_still_5,hd_still_6,hd_still_6-1,hd_still_7,hd_still_7-1," +
+    "hd_ultrasound_15_s_1,hd_ultrasound_15_s_2,hd_ultrasound_15_s_3,hd_ultrasound_25_s_4";
 
     KalturaClient.media.listAction(function(results) {
         if (results.objectType === 'KalturaAPIException') {
