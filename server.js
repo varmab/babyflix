@@ -1,25 +1,26 @@
-var express = require('express')
-var bodyParser= require('body-parser')
-var logger= require('morgan')
-var errorHandler= require('errorhandler')
-var okay= require('okay')
-var routes = require('./routes');
-var mysql      = require('mysql');
+var express     = require('express');
+var bodyParser  = require('body-parser');
+var logger      = require('morgan');
+var errorHandler= require('errorhandler');
+var okay        = require('okay');
+var routes      = require('./routes');
+var mysql       = require('mysql');
 
 require('dotenv').load();
 
-var app=express()
+var app=express();
 
-app.use(logger('dev'))
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({extended: true}))
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 
 
 app.get('/',function(req,res){
-    res.send('Babyflix API Server')
+    res.send('Babyflix API Server');
 })
 
 app.get('/batch',function(req,res,next){
+
     var connection = mysql.createConnection({
         host     : process.env.BABYFLIX_MYSQLHOST,
         user     : process.env.BABYFLIX_MYSQLUSER,
@@ -29,13 +30,27 @@ app.get('/batch',function(req,res,next){
 
     connection.connect();
 
-    connection.query("INSERT INTO BatchLog(userid,batchnumber) VALUES(1892,'B001')", function(err, rows, fields) {
-        if (err) throw err;
+    var sqlFindJob = "select * from jobs where userid=? and batch=?";
+    var sqlNewJob = "insert into jobs (userid, batch) values (?,?)";
+    connection.connect(function(err){});
+    var query = connection.query(sqlFindJob, [req.query.userid,req.query.batch], function(err, results) {
+        if(err) throw err;
 
-        console.log('row inserted');
+        if(results.length==0) {
+            var query = connection.query(sqlNewJob, [req.query.userid,req.query.batch], function(err, results) {
+                if(err) throw err;
+                console.log("added user");
+                var user_id = results.insertId;
+                connection.end();
+                res.send(user_id);
+            });
+        }
+        else
+        {
+            res.send('Already exists');
+        }
     });
 
-    connection.end();
 })
 
 app.use(errorHandler)
