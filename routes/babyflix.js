@@ -16,7 +16,7 @@ exports.getPendingJobs= function(){
 
     connection.connect();
 
-    connection.query("SELECT distinct userid FROM jobs WHERE jobstatus=0", function(err, rows, fields) {
+    connection.query("SELECT distinct userid FROM babyflix_jobs WHERE jobstatus=0", function(err, rows, fields) {
         if (err) return deferred.reject(err);
 
         rows.forEach(function(row){
@@ -43,7 +43,7 @@ exports.getUserInfo= function(userId){
 
     connection.connect();
 
-    connection.query("SELECT * FROM jobs WHERE jobstatus=0", function(err, rows, fields) {
+    connection.query("SELECT * FROM babyflix_jobs WHERE jobstatus=0", function(err, rows, fields) {
         if (err) return deferred.reject(err);
 
         rows.forEach(function(row){
@@ -69,7 +69,7 @@ exports.updateJobComplete= function(userid){
 
     connection.connect();
 
-    connection.query("UPDATE jobs SET jobstatus=1 WHERE userid=" + userid, function(err, rows, fields) {
+    connection.query("UPDATE babyflix_jobs SET jobstatus=1 WHERE userid=" + userid, function(err, rows, fields) {
         if (err) console.log('Error ' + err);
         connection.end();
     });

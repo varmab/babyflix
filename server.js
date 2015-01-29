@@ -30,8 +30,8 @@ app.get('/batch',function(req,res,next){
 
     connection.connect();
 
-    var sqlFindJob = "select * from jobs where userid=? and batch=?";
-    var sqlNewJob = "insert into jobs (userid, batch) values (?,?)";
+    var sqlFindJob = "select * from babyflix_jobs where userid=? and batch=?";
+    var sqlNewJob = "insert into babyflix_jobs (userid, batch) values (?,?)";
     connection.connect(function(err){});
     var query = connection.query(sqlFindJob, [req.query.userid,req.query.batch], function(err, results) {
         if(err) throw err;
