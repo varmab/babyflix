@@ -55,3 +55,45 @@ exports.listUser = function() {
     }, null, pager);
     return deferred.promise;
 }
+
+exports.uploadMedia = function(videoFile) {
+    var deferred = Promise.pending();
+
+    var fs = require("fs");
+
+    var DOWNLOAD_DIR = './downloads/';
+    var fileWithPath=DOWNLOAD_DIR+videoFile;
+
+    fs.exists(fileWithPath, function(exists) {
+        if (exists) {
+            fs.stat(fileWithPath, function(error, stats) {
+                fs.open(fileWithPath, "r", function(error, fd) {
+                    var buffer = new Buffer(stats.size);
+
+                    fs.read(fd, buffer, 0, buffer.length, null, function(error, bytesRead, buffer) {
+                        var data = buffer.toString("utf8", 0, buffer.length);
+
+                        var uploadToken = null;
+                        KalturaClient.uploadToken.add(function(){
+                            console.log('ddd')
+                        }, uploadToken);
+
+                        console.log(result);
+
+                        fs.close(fd);
+                    });
+                });
+            });
+        }
+    });
+
+    /**
+    KalturaClient.media.addMediaEntry(function(results) {
+        if (results.objectType === 'KalturaAPIException') {
+            return deferred.reject(results);
+        }
+        deferred.resolve(results.objects);
+    }, null, pager);*/
+
+    return deferred.promise;
+}

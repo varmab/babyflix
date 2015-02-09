@@ -69,31 +69,39 @@ exports.createVideo= function(media){
     return deferred.promise;
 }
 
-exports.createTestVideo= function(media){
+exports.createTestVideo= function(media,userInfo){
 
-    var taskHeaderDefinition="<movie service='craftsman-1.0'><body><stack>";
-    var taskFooterDefinition="<effect type='none'><text type='zone' height='0.15' right='0.0' bottom='0.0'>Demo Video</text></effect><overlay height='0.20' right='0.0' top='0.0'><image filename='http://s3.amazonaws.com/stupeflix-assets/apiusecase/logo_stupeflix.png'/></overlay></stack>" +
-        "<transition type='crossfade' duration='0.5'/><effect type='none'><video filename='http://s3.amazonaws.com/stupeflix-assets/apiusecase/branding-postroll.mp4'/></effect></body></movie>";
+    var deferred = Promise.pending();
+
+    var pics=[];
+    var videos=[];
+
+    var taskHeaderDefinition="<movie service='craftsman-1.0'><body><widget type='customers2.babyflix.01'><text>" + userInfo.first_name + ' ' + userInfo.last_name + "</text><text>" + userInfo.baby_name + "</text>";
+    var taskFooterDefinition="</widget></body></movie>";
     var taskItemDefinition="";
 
 
     if(media.length>0) {
 
         media.forEach(function (item) {
-            if (item.name.indexOf('still') > -1) {
-                taskItemDefinition = taskItemDefinition + "<effect type='none'><image filename='" + item.downloadUrl + "'/></effect>";
+
+            if(item.mediaType==1){
+                taskItemDefinition = taskItemDefinition + "<video filename='" + item.downloadUrl + "'/>";
             }
-            else {
-                taskItemDefinition = taskItemDefinition + "<effect type='none'><video filename='" + item.downloadUrl + "'/></effect>";
+            else
+            {
+                taskItemDefinition = taskItemDefinition + "<image filename='" + item.downloadUrl + "'/>"
             }
 
-        })
+        });
+
+
 
         var taskDefintion=taskHeaderDefinition + taskItemDefinition + taskFooterDefinition;
 
         console.log(taskDefintion);
 
-        /**
+
         var deferred = Promise.pending();
         var secret = "Secret " + process.env.STUPEFLIX_SECRET
 
@@ -121,11 +129,10 @@ exports.createTestVideo= function(media){
          .catch(function(error){
             deferred.reject(error);
         });
-         **/
 
     }
 
-      return deferred.promise;
+    return deferred.promise;
 
 }
 

@@ -16,8 +16,9 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 
 app.get('/',function(req,res){
-    res.send('Babyflix API Server');
+    res.sendfile(__dirname + '/public/index.html');
 })
+
 
 app.get('/batch',function(req,res,next){
 
@@ -56,4 +57,6 @@ app.get('/batch',function(req,res,next){
 app.use(errorHandler)
 
 var server=require('http').createServer(app).listen(3000)
+
+
 
